@@ -203,6 +203,7 @@ for (i in 1:2000){
 
   infolist <- c(infolist, info)
 }
+
 length(infolist)
 infomatrix <- matrix(infolist, ncol=25, byrow=TRUE)
 
