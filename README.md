@@ -9,5 +9,5 @@
 
 >>네티즌의 성별·연령별 평점, 관람객의 성별·연령별 평점
 
-코드 실행 후 저장된 csv파일
-<img src="https://user-images.githubusercontent.com/73769046/100460656-e7017b00-310a-11eb-8d27-bd550547bc65.PNG" width="700" height="370">
+>코드 실행 후 저장된 csv파일
+>><img src="https://user-images.githubusercontent.com/73769046/100460656-e7017b00-310a-11eb-8d27-bd550547bc65.PNG" width="700" height="370">
