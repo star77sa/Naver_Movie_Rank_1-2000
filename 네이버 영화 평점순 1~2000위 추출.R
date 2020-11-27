@@ -43,12 +43,16 @@ codes <- gsub("=","",codes)     #5자리 영화코드의 '='을 제거해준다.
 ## NA인데 전꺼에 기록이 남아서 값이 이상한 경우가 있음.
 ## 이상할거같으면 초기화시켜주는 작업까지 해주자.
 
-infolist=NULL
-infolist
 
 #여기서 부터 for문으로 2000번 반복해주어야함. 벡터 리스트에 전부 담자!
 baseurl <- 'https://movie.naver.com/movie/bi/mi/point.nhn?code='
 codes[2000]
+
+NAs <- rep("NA", 30)
+
+
+infolist <- NULL
+
 for (i in 1:2000){
   url <- paste0(baseurl,codes[i])
   html <- read_html(url, encoding = "utf-8")
@@ -80,10 +84,21 @@ for (i in 1:2000){
     html_nodes("p")%>%
     html_text()
   
+  if(length(tables)==3){
+    tables[4] <- tables[3]
+    tables[3] <- NA
+    }
+  
   tables <- gsub("\\n|\\t|\\r","",tables)
   director <- tables[2]
   actor <- tables[3]
   view_class <- tables[4]
+  
+  if(is.na(release)){
+    temp=view_class
+    view_class=actor
+    actor=temp
+  }
   
   info_spec1 <- c(genre,country,runtime,release,director,actor,view_class)
   
@@ -100,8 +115,9 @@ for (i in 1:2000){
     html_text()
   
   
-  tables
+#  tables
   
+  if(length(tables)<10){tables <- c(tables, NAs)}
   
   aud_count <- tables[16] #audience_count
   aud_score <- paste(tables[17:20], collapse="") #audience_score
@@ -115,6 +131,20 @@ for (i in 1:2000){
     
     aud_count <- tables[17] #audience_count
     aud_score <- paste(tables[18:21], collapse="") #audience_score
+  }else if(tables[17] == "네티즌 평점"){
+    ntz_count <- tables[19] #netizen_count
+    ntz_score <- paste(tables[20:23], collapse="") #netizen_score
+    
+    aud_count <- NA #audience_count
+    aud_score <- NA #audience_score
+    
+  }else if(tables[17] == "기자 · 평론가 평점"){
+    ntz_count <- tables[24] #netizen_count
+    ntz_score <- paste(tables[25:28], collapse="") #netizen_score
+    
+    aud_count <- NA #audience_count
+    aud_score <- NA #audience_score
+    
   }else{
     ntz_count <- tables[23] #netizen_count
     ntz_score <- paste(tables[24:27], collapse="") #netizen_score
@@ -132,6 +162,8 @@ for (i in 1:2000){
     html_nodes("div")%>%
     html_nodes("strong")%>%
     html_text()
+  
+  if(length(score)<10){score <- c(score, NAs)}
   
   if(score[1]=="네티즌 평점 도움말")
   {
@@ -163,16 +195,19 @@ for (i in 1:2000){
   info_spec3 <- c(aud_score, aud_count, audience) #audience 9개요소
   info_spec3 <- gsub("NANANA",NA,info_spec3) 
   
-  info_spec1
-  info_spec2
-  info_spec3
+#  info_spec1
+#  info_spec2
+#  info_spec3
   
   info <- c(info_spec1, info_spec2, info_spec3)
 
-  infolist <- rbind(infolist,info)
+  infolist <- c(infolist, info)
 }
+length(infolist)
+infomatrix <- matrix(infolist, ncol=25, byrow=TRUE)
 
-head(infolist)
+nrow(infolist)
 
 
 
+cbind(unlist(titlelist),unlist(codelist),infomatrix)
