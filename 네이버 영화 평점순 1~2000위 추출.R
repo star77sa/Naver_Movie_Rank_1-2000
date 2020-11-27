@@ -1,7 +1,5 @@
 library(rvest)
 
-#여기서 페이지설정 / 한페이지에 50개 영화 / 40페이지까지 할 것 / 영화제목까지??...
-
 #임시로 40개 페이지에서 각 페이지당 50개의 제목 / 코드를 담을 리스트
 titlelist=vector(mode="list",length=40)
 codelist=vector(mode="list",length=40)
@@ -11,8 +9,9 @@ baseurl <- 'https://movie.naver.com/movie/sdb/rank/rmovie.nhn?sel=pnt&date=20201
 for(page in 1:40){
   url <- paste0(baseurl,page)
   html <- read_html(url, encoding = "euc-kr")
+  
   ## 제목 추출과정
-    title <- html%>%
+  title <- html%>%
     html_nodes("td")%>%
     html_nodes("a")%>%
     html_attr("title")
@@ -36,21 +35,14 @@ title <- unlist(titlelist)
 codes <- unlist(codelist)
 codes <- gsub("=","",codes)     #5자리 영화코드의 '='을 제거해준다.
 
+
 ################### 2차과정. 나머지 25개의 요소 추출 ################
 
-#임시로 1번만, 대충 완성되면 2000개
+#for문으로 2000번 반복. 하나의 벡터에 25개*2000개의 정보를 전부 담을 것임.
 
-## NA인데 전꺼에 기록이 남아서 값이 이상한 경우가 있음.
-## 이상할거같으면 초기화시켜주는 작업까지 해주자.
-
-
-#여기서 부터 for문으로 2000번 반복해주어야함. 벡터 리스트에 전부 담자!
 baseurl <- 'https://movie.naver.com/movie/bi/mi/point.nhn?code='
-codes[2000]
 
 NAs <- rep("NA", 30)
-
-
 infolist <- NULL
 
 for (i in 1:2000){
@@ -102,7 +94,6 @@ for (i in 1:2000){
   
   info_spec1 <- c(genre,country,runtime,release,director,actor,view_class)
   
-  
   ##### netizen, audience 추출 과정 : info_spec2, info_spec3 #####
   
   # netizen, audience의 _count와 _score
@@ -114,40 +105,36 @@ for (i in 1:2000){
     html_nodes("em")%>%
     html_text()
   
-  
-#  tables
-  
   if(length(tables)<10){tables <- c(tables, NAs)}
   
   aud_count <- tables[16] #audience_count
-  aud_score <- paste(tables[17:20], collapse="") #audience_score
+  aud_score <- paste(tables[17:20], collapse="")   #audience_score
+  
+  #예외케이스들이 꽤 많다..
   
   if(tables[21] == "기자 · 평론가 평점"){
-    ntz_count <- tables[28] #netizen_count
-    ntz_score <- paste(tables[29:32], collapse="") #netizen_score
+    ntz_count <- tables[28]                         #netizen_count
+    ntz_score <- paste(tables[29:32], collapse="")  #netizen_score
   }else if(tables[22] == "기자 · 평론가 평점"){
-    ntz_count <- tables[29] #netizen_count
-    ntz_score <- paste(tables[30:33], collapse="") #netizen_score
+    ntz_count <- tables[29]                         #netizen_count
+    ntz_score <- paste(tables[30:33], collapse="")  #netizen_score
     
-    aud_count <- tables[17] #audience_count
-    aud_score <- paste(tables[18:21], collapse="") #audience_score
+    aud_count <- tables[17]                         #audience_count
+    aud_score <- paste(tables[18:21], collapse="")  #audience_score
   }else if(tables[17] == "네티즌 평점"){
-    ntz_count <- tables[19] #netizen_count
-    ntz_score <- paste(tables[20:23], collapse="") #netizen_score
-    
-    aud_count <- NA #audience_count
-    aud_score <- NA #audience_score
+    ntz_count <- tables[19]                         #netizen_count
+    ntz_score <- paste(tables[20:23], collapse="")  #netizen_score
+    aud_count <- NA                                 #audience_count
+    aud_score <- NA                                 #audience_score
     
   }else if(tables[17] == "기자 · 평론가 평점"){
-    ntz_count <- tables[24] #netizen_count
-    ntz_score <- paste(tables[25:28], collapse="") #netizen_score
-    
-    aud_count <- NA #audience_count
-    aud_score <- NA #audience_score
-    
+    ntz_count <- tables[24]                         #netizen_count
+    ntz_score <- paste(tables[25:28], collapse="")  #netizen_score
+    aud_count <- NA                                 #audience_count
+    aud_score <- NA                                 #audience_score
   }else{
-    ntz_count <- tables[23] #netizen_count
-    ntz_score <- paste(tables[24:27], collapse="") #netizen_score
+    ntz_count <- tables[23]                         #netizen_count
+    ntz_score <- paste(tables[24:27], collapse="")  #netizen_score
   }
   
   # netizen, audience의 성별 평점, 연령별 평점
@@ -165,6 +152,8 @@ for (i in 1:2000){
   
   if(length(score)<10){score <- c(score, NAs)}
   
+  #예외케이스
+  
   if(score[1]=="네티즌 평점 도움말")
   {
     netizen <- score[5:18]
@@ -178,37 +167,37 @@ for (i in 1:2000){
     audience <- score[47:60]
   }
   
-  n_sex <- netizen[c(1,3)] # netizen_성별 평점
-  n_age <- netizen[5:14] # netizen_연령별 평점
+  n_sex <- netizen[c(1,3)]  # netizen_성별 평점
+  n_age <- netizen[5:14]    # netizen_연령별 평점
   n_age <- n_age[c(FALSE,TRUE)]
   netizen <- c(n_sex,n_age) #netizen_성별 + 연령별 평점
   
   a_sex <- audience[c(1,3)] # audience_성별 평점
-  a_age <- audience[5:14] # audience_연령별 평점
+  a_age <- audience[5:14]   # audience_연령별 평점
   a_age <- a_age[c(FALSE,TRUE)]
   audience <- c(a_sex, a_age) #audience_성별 + 연령별 평점
   
   
-  info_spec2 <- c(ntz_score, ntz_count, netizen) #netizen 9개요소
+  info_spec2 <- c(ntz_score, ntz_count, netizen)  #netizen 9개요소
   info_spec2 <- gsub("NANANA",NA,info_spec2) 
   
   info_spec3 <- c(aud_score, aud_count, audience) #audience 9개요소
   info_spec3 <- gsub("NANANA",NA,info_spec3) 
   
-#  info_spec1
-#  info_spec2
-#  info_spec3
-  
   info <- c(info_spec1, info_spec2, info_spec3)
-
-  infolist <- c(infolist, info)
+  infolist <- c(infolist, info) # 모든 정보를 누적해서 infolist에 담는다.
 }
 
-length(infolist)
-infomatrix <- matrix(infolist, ncol=25, byrow=TRUE)
+infomatrix <- matrix(infolist, ncol=25, byrow=TRUE) # 모든 정보가 담긴 infolist를 매트릭스로 만든다.
 
-nrow(infolist)
+movie <- data.frame(cbind(unlist(titlelist),unlist(codelist),infomatrix)) # 최종적으로 데이터프레임으로 바꾸어준다.
 
+col <- c("title", "code", "genre", "country", "runtime", "release", 
+         "director", "actor", "view_class", 
+         "netizen_score", "netizen_count", "ntz_male", "ntz_female", 
+         "ntz_10", "ntz_20", "ntz_30", "ntz_40", "ntz_50",
+         "audience_score", "audience_count", "audience_male", "audience_female", 
+         "audience_10",	"audience_20",	"audience_30", "audience_40", "audience_50")
+colnames(movie) <- col
 
-
-cbind(unlist(titlelist),unlist(codelist),infomatrix)
+write.csv(movie, file='movie2.csv') # 만들어진 데이터를 csv파일로 저장!!
