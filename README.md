@@ -58,5 +58,4 @@
 
 > Naver_Movie_Rank_aud_male_female.R 코드를 추가하였음.
 
-#### 코드 실행 후 저장된 csv파일
 ><img src="https://user-images.githubusercontent.com/73769046/101238072-0ad34b00-3721-11eb-85a4-43ce73cba0d5.JPG" width="700" height="370">
