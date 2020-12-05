@@ -48,3 +48,9 @@
 >그 뒤에, 앞전에 구한 title, code정보를 위의 행렬과 합쳐 데이터프레임으로 변경시킨 뒤, write.csv를 써서 csv파일로 저장시켜주었다.
 
 >조금 더 시간을 단축시킬 수 있는 코드를 고민해보자!
+
+
+#### 코드 실행 후 저장된 csv파일
+><img src="https://user-images.githubusercontent.com/73769046/100460656-e7017b00-310a-11eb-8d27-bd550547bc65.PNG" width="700" height="370">
+
+><img src="https://user-images.githubusercontent.com/73769046/101238072-0ad34b00-3721-11eb-85a4-43ce73cba0d5.JPG" width="700" height="370">
