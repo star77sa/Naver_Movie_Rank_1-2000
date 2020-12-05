@@ -50,7 +50,13 @@
 >조금 더 시간을 단축시킬 수 있는 코드를 고민해보자!
 
 
-#### 코드 실행 후 저장된 csv파일
-><img src="https://user-images.githubusercontent.com/73769046/100460656-e7017b00-310a-11eb-8d27-bd550547bc65.PNG" width="700" height="370">
+##### 2020-12-04
 
+> R Selenium을 이용한 데이터 추출법을 배워, 이를 이용하여 rvest만으론 추출할 수 없는 영화에 대한 관람객의 성별 선호도를 뽑아냄.
+
+> 또한 위에서 했던 영화코드, 영화 타이틀 추출이나 하나의 데이터프레임으로 묶는 코드를 깔끔하게 변경하였다.
+
+> Naver_Movie_Rank_aud_male_female.R 코드를 추가하였음.
+
+#### 코드 실행 후 저장된 csv파일
 ><img src="https://user-images.githubusercontent.com/73769046/101238072-0ad34b00-3721-11eb-85a4-43ce73cba0d5.JPG" width="700" height="370">
