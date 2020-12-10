@@ -1,8 +1,6 @@
 movie <- read.csv("C:\\movie.csv",header = T)
 audience_gender <- read.csv("C:\\audience_gender.csv",header = T)
 
-movie[3]
-
 ### 두 자료의 순위가 달라, 영화 코드를 기준으로 병합한다.
 
 # 두 자료를 코드 순으로 정렬
@@ -24,25 +22,44 @@ attach(movie)
 #개봉한 달에 따른(계절에 따른) 네티즌 스코어 비교?
 
 release <- gsub(" ","",release) # 공백제거
-release <- substr(release, 6, 7) # 개월만 추출출
+release <- substr(release, 6, 7) # 개월만 추출
 release <- as.integer(release) # string 을 int로 변경
 
-movie[7] <- release
+movie[7] <- release # movie[7] = release
 #16
-compare <- movie[,c(7,16)]
-pairs(compare, panel=panel.smooth)
+#compare <- movie[,c(7,16)]
+#pairs(compare, panel=panel.smooth)
+
+
+
+## 
+view_class <- substr(view_class, 5, 6)
+movie[10] <- view_class # movie[10] = 
+
+청소년 <- na.omit(movie[which(movie[10]=="청소"),])
+attach(청소년)
+summary(청소년)
+
+
+mean(as.integer(unlist(청소년[34])))
+mean(as.integer(unlist(청소년[35])))
+length(unlist(청소년[35]))
+
+
+audience_male
+
+as.integer(unlist(청소년[34])) > as.integer(unlist(청소년[35]))
+## 청소년 관람불가 영화가 남자가 여자보다 더 많은 영화 갯수
 
 
 
 
-view_class <- 
+plot(view_class, unlist(movie[34]))
+length(view_class)
+length(movie[34])
 
 
-
-
-
-mean(as.integer(na.omit(unlist(movie[16]))))
-
+# viewclass = 10
 
 # 5 6 
 a <- "abcde"
