@@ -61,6 +61,7 @@ max(table(release))/min(table(release))
 #subset(movie,movie[4][,1]%in%c("드라")) 
 #?subset
 
+
 drama <- length(grep("드라마",movie[4][,1])) 
 melo <- length(grep("멜로",movie[4][,1])) 
 advanture <- length(grep("모험",movie[4][,1])) 
@@ -92,7 +93,7 @@ aud_50 <- mean(movie[15][,1], na.rm = T)
 
 plot(c(aud_10,aud_20,aud_30,aud_40,aud_50))
 # 전체는 20,30대가 많이 보는 것을 알 수 있다...
-
+# 드라마를 특정 성별, 나이대가 좋아하는지 비교해보았으나 전체장르와 유의미한 차이를 보이지는 않았다.
 
 
 
@@ -102,15 +103,32 @@ plot(c(aud_10,aud_20,aud_30,aud_40,aud_50))
 
 
 
+######### 연령분석!!!!!!!!!!
+
+v_all <- length(grep("전체",movie[10][,1])) 
+v_12 <- length(grep("12세",movie[10][,1])) 
+v_15 <- length(grep("15세",movie[10][,1])) 
+v_19 <- length(grep("청소년",movie[10][,1]))
 
 
+plot(c(v_all,v_12,v_15,v_19),xlab="연령가",ylab="빈도수")
 
+v_all <- length((grep("전체",movie[10][,1])))
 
+v_12 <- (grep("12세",movie[10][,1])) 
+v_15 <- (grep("15세",movie[10][,1])) 
+v_19 <- (grep("청소년",movie[10][,1]))
 
+hist(c(v_all,v_12,v_15,v_19),xlab="연령가",ylab="빈도수")
 
-
-
-
+########## 이거 그래프에 잘 나타나게 하는거 ...
+#
+#200 ㅣ
+#100 ㅣ
+#  0 ㅣ_ _ _ _ _ _ _ _ _
+#     12세 15세 청소년
+# 요런식으러 나오게 하는거 알아보기.
+################################################# 12.11 대충 쓸만한거 분석한곳
 summary(movie)
 
 str(movie[7][,1])
