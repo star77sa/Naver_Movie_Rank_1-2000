@@ -201,3 +201,4 @@ col <- c("title", "code", "genre", "country", "runtime", "release",
 colnames(movie) <- col
 
 write.csv(movie, file='movie2.csv') # 만들어진 데이터를 csv파일로 저장!!
+
