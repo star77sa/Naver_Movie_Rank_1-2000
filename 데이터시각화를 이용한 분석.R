@@ -7,25 +7,31 @@ audience_gender <- read.csv("C:\\audience_gender.csv",header = T)
 movie <- movie[order(movie[3]),] 
 audience_gender <- audience_gender[order(audience_gender[3]),]
 
-audience_male <- audience_gender[4]
-audience_female <- audience_gender[5]
+# 남성관객, 여성관객수의 퍼센트를 이용하기 위해 factor -> integer으로 변환
+male_percent <- vector(mode="integer", length=2000)
+female_percent <- vector(mode="integer", length=2000)
+for(i in 1:2000){
+  male_percent[i] <- as.integer(substr(audience_gender[4][i,1], 1, 2))
+  female_percent[i] <- as.integer(substr(audience_gender[5][i,1], 1, 2))
+}
 
-movie <- cbind(movie, audience_male, audience_female)
+movie <- data.frame(movie, male_percent, female_percent)
 
 # 다시 순위 순으로 정렬
 movie <- movie[order(movie[1]),]
 
-
-
 attach(movie)
 
-#개봉한 달에 따른(계절에 따른) 네티즌 스코어 비교?
-
-release <- gsub(" ","",release) # 공백제거
+######개봉한 달에 따른(계절에 따른) 네티즌 스코어 비교?
+release <- gsub(" ","",movie[7][,1]) # 공백제거
 release <- substr(release, 6, 7) # 개월만 추출
-release <- as.integer(release) # string 을 int로 변경
+movie[7][,1] <- as.integer(release) # string 을 int로 변경
 
-movie[7] <- release # movie[7] = release
+
+plot(factor(movie[7][,1]), audience_score)
+
+# movie[7] <- release # movie[7]= release
+
 #16
 #compare <- movie[,c(7,16)]
 #pairs(compare, panel=panel.smooth)
@@ -33,34 +39,17 @@ movie[7] <- release # movie[7] = release
 
 
 ## 
-view_class <- substr(view_class, 5, 6)
-movie[10] <- view_class # movie[10] = 
+movie[10][,1] <- substr(movie[10][,1], 5, 6)
+adult <- na.omit(movie[which(movie[10]=="청소"),])
 
-청소년 <- na.omit(movie[which(movie[10]=="청소"),])
-attach(청소년)
-summary(청소년)
-
-
-mean(as.integer(unlist(청소년[34])))
-mean(as.integer(unlist(청소년[35])))
-length(unlist(청소년[35]))
-
-
-audience_male
-
-as.integer(unlist(청소년[34])) > as.integer(unlist(청소년[35]))
-## 청소년 관람불가 영화가 남자가 여자보다 더 많은 영화 갯수
+plot(factor(adult[7][,1]), adult[35][,1]) ## 청소년관람불가일때, 개봉월별 남자관객 수
 
 
 
 
-plot(view_class, unlist(movie[34]))
-length(view_class)
-length(movie[34])
+summary(adult)
 
 
-# viewclass = 10
 
-# 5 6 
-a <- "abcde"
-a <- substr(a,2,3)
+
+
