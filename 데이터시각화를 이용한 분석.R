@@ -7,20 +7,30 @@ audience_gender <- read.csv("C:\\audience_gender.csv",header = T)
 movie <- movie[order(movie[3]),] 
 audience_gender <- audience_gender[order(audience_gender[3]),]
 
-# 남성관객, 여성관객수의 퍼센트를 이용하기 위해 factor -> integer으로 변환
-male_percent <- vector(mode="integer", length=2000)
-female_percent <- vector(mode="integer", length=2000)
-for(i in 1:2000){
-  male_percent[i] <- as.integer(substr(audience_gender[4][i,1], 1, 2))
-  female_percent[i] <- as.integer(substr(audience_gender[5][i,1], 1, 2))
-}
+# 두 자료를 병합
+movie <- data.frame(movie, audience_gender[4][,1], audience_gender[5][,1])
 
-movie <- data.frame(movie, male_percent, female_percent)
-
-# 다시 순위 순으로 정렬
+#다시 순위 순으로 정렬
 movie <- movie[order(movie[1]),]
 
-attach(movie)
+
+# factor값을 분석에 이용하기 위해 numeric로 바꾸는 함수
+Trans_num <- function(i){
+  x <- movie[i][,1]
+  x <- as.character(x)
+  x <- gsub( "%", "", x)
+  x <- as.numeric(x)
+  return(x)
+}
+
+# factor를 numeric으로 변환
+for(i in c(11:15 ,34:35)){
+  movie[i][,1] <- Trans_num(i)
+}
+
+
+
+#attach(movie)
 
 ##### 1. 개봉한 달에 따라서
 
@@ -52,17 +62,11 @@ max(table(release))/min(table(release))
 #?subset
 
 drama <- length(grep("드라마",movie[4][,1])) 
-
 melo <- length(grep("멜로",movie[4][,1])) 
-
 advanture <- length(grep("모험",movie[4][,1])) 
-
 thriller <- length(grep("스릴러",movie[4][,1]))
-
 animation <- length(grep("애니메이션",movie[4][,1])) 
-
 comedy <- length(grep("코미디",movie[4][,1])) 
-
 war <- length(grep("전쟁",movie[4][,1])) 
 
 Genre <- c(drama, melo, advanture, thriller, animation, comedy, war)
@@ -72,9 +76,38 @@ plot(Genre)  # plot 타입 바꿔주자
 
 # 평점순으로 나열한 2000개의 영화중 1096개의 영화가 드라마이다.
 # 그렇다면 이 드라마의 주요 관람층은 누구인가?
-# 
+ 
+mean(movie[35][,1], na.rm=T)
+mean(movie[35][grep("드라마",movie[4][,1]),1], na.rm=T)
+## 남여차이는 딱히 없다. 그렇다면 연령별은?
 
-movie[3][grep("드라마",movie[4][,1]),1]
+#11 : 10대 , ~ 
+
+
+aud_10 <- mean(movie[11][,1], na.rm = T)
+aud_20 <- mean(movie[12][,1], na.rm = T)
+aud_30 <- mean(movie[13][,1], na.rm = T)
+aud_40 <- mean(movie[14][,1], na.rm = T)
+aud_50 <- mean(movie[15][,1], na.rm = T)
+
+plot(c(aud_10,aud_20,aud_30,aud_40,aud_50))
+# 전체는 20,30대가 많이 보는 것을 알 수 있다...
+
+
+
+
+######## 유의미한 결과를 얻지 못한다... 드라마 장르랑 뭐랑 엮지 ? ..
+
+
+
+
+
+
+
+
+
+
+
 
 
 
